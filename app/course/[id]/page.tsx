@@ -1,6 +1,5 @@
 import { supabase } from "../../../lib/supabase";
 import Link from "next/link";
-import EnrollButton from "../../../components/EnrollButton";
 
 export default async function CoursePage({
   params,
@@ -67,9 +66,7 @@ export default async function CoursePage({
 
         {/* Enroll Button */}
         <div className="mb-8">
-          <EnrollButton
-            courseId={course.id}
-          />
+        
         </div>
 
         {/* Course Details */}
