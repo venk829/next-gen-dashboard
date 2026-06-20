@@ -1,125 +1,77 @@
+export const dynamic = "force-dynamic";
+
 import { supabase } from "../../lib/supabase";
 import Link from "next/link";
 
 export default async function EnrollmentsPage() {
   const { data: enrollments, error } = await supabase
-    .from("enrollments")
-    .select(`
-      *,
-      courses (
-        title
-      )
-    `)
-    .order("created_at", { ascending: false });
+    .from("courses")
+    .select("*");
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-950 text-red-500">
-        <h1 className="text-2xl">
-          Error: {error.message}
+      <div className="min-h-screen bg-slate-950 text-white p-10">
+        <h1 className="text-3xl font-bold mb-4">
+          Error Loading Enrollments
         </h1>
+
+        <p className="text-red-400">
+          {error.message}
+        </p>
+
+        <Link
+          href="/"
+          className="inline-block mt-6 bg-cyan-500 px-6 py-3 rounded-xl"
+        >
+          Back to Dashboard
+        </Link>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black text-white p-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black p-8">
       <div className="max-w-6xl mx-auto">
+        <Link
+          href="/"
+          className="text-cyan-400 hover:text-cyan-300"
+        >
+          ← Back to Dashboard
+        </Link>
 
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-5xl font-bold">
-            Student Enrollments
-          </h1>
+        <h1 className="text-5xl font-bold text-white mt-6 mb-10">
+          My Enrollments
+        </h1>
 
-          <Link
-            href="/admin"
-            className="bg-cyan-500 hover:bg-cyan-600 px-5 py-3 rounded-xl font-semibold transition"
-          >
-            ← Back to Admin
-          </Link>
-        </div>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {enrollments?.map((course) => (
+            <div
+              key={course.id}
+              className="bg-white/10 backdrop-blur-lg border border-white/10 rounded-3xl p-6"
+            >
+              <h2 className="text-2xl font-bold text-white mb-3">
+                {course.title}
+              </h2>
 
-        {/* Stats */}
-        <div className="grid md:grid-cols-3 gap-6 mb-10">
-          <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-6 border border-white/10">
-            <h3 className="text-slate-300">
-              Total Enrollments
-            </h3>
+              <p className="text-slate-300 mb-4">
+                {course.description}
+              </p>
 
-            <p className="text-4xl font-bold text-cyan-400 mt-2">
-              {enrollments?.length || 0}
-            </p>
-          </div>
-
-          <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-6 border border-white/10">
-            <h3 className="text-slate-300">
-              Active Students
-            </h3>
-
-            <p className="text-4xl font-bold text-green-400 mt-2">
-              {enrollments?.length || 0}
-            </p>
-          </div>
-
-          <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-6 border border-white/10">
-            <h3 className="text-slate-300">
-              Courses Enrolled
-            </h3>
-
-            <p className="text-4xl font-bold text-purple-400 mt-2">
-              {enrollments?.length || 0}
-            </p>
-          </div>
-        </div>
-
-        {/* Enrollment Cards */}
-        {enrollments && enrollments.length > 0 ? (
-          <div className="grid gap-5">
-            {enrollments.map((item: any) => (
-              <div
-                key={item.id}
-                className="bg-white/10 backdrop-blur-lg rounded-3xl p-6 border border-white/10"
-              >
-                <h2 className="text-2xl font-bold text-white">
-                  {item.student_name}
-                </h2>
-
-                <p className="text-cyan-400 mt-3">
-                  Course:
-                  {" "}
-                  {item.courses?.title ||
-                    "Unknown Course"}
-                </p>
-
-                <p className="text-slate-400 mt-3">
-                  Enrolled On:
-                  {" "}
-                  {new Date(
-                    item.created_at
-                  ).toLocaleDateString()}
-                </p>
-
-                <p className="text-slate-500 text-sm mt-2">
-                  {new Date(
-                    item.created_at
-                  ).toLocaleTimeString()}
-                </p>
+              <div className="w-full bg-slate-700 rounded-full h-3 mb-4">
+                <div
+                  className="bg-cyan-500 h-3 rounded-full"
+                  style={{
+                    width: `${course.progress || 0}%`,
+                  }}
+                />
               </div>
-            ))}
-          </div>
-        ) : (
-          <div className="bg-white/10 rounded-3xl p-10 text-center">
-            <h2 className="text-3xl font-bold">
-              No Enrollments Found
-            </h2>
 
-            <p className="text-slate-400 mt-3">
-              Students will appear here after
-              enrolling in courses.
-            </p>
-          </div>
-        )}
+              <p className="text-cyan-400 font-bold">
+                {course.progress || 0}% Completed
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
