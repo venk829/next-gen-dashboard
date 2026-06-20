@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { supabase } from "../../../lib/supabase";
 import Link from "next/link";
 
@@ -16,86 +18,79 @@ export default async function CoursePage({
 
   if (error || !course) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white">
-        <h1 className="text-3xl font-bold">
-          Course Not Found
-        </h1>
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center text-white">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold mb-4">
+            Course Not Found
+          </h1>
+
+          <Link
+            href="/"
+            className="bg-cyan-500 px-6 py-3 rounded-xl"
+          >
+            Back to Dashboard
+          </Link>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white p-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black p-8">
       <Link
         href="/"
-        className="inline-block mb-6 bg-cyan-500 hover:bg-cyan-600 px-4 py-2 rounded-lg"
+        className="text-cyan-400 hover:text-cyan-300"
       >
         ← Back to Dashboard
       </Link>
 
-      <div className="max-w-5xl mx-auto bg-white/10 backdrop-blur-lg rounded-3xl p-8 border border-white/10">
+      <div className="max-w-4xl mx-auto mt-8">
+        <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 border border-white/10">
+          <h1 className="text-5xl font-bold text-white mb-6">
+            {course.title}
+          </h1>
 
-        {course.image_url && (
-          <img
-            src={course.image_url}
-            alt={course.title}
-            className="w-full h-80 object-cover rounded-2xl mb-8"
-          />
-        )}
-
-        <h1 className="text-5xl font-bold mb-4">
-          {course.title}
-        </h1>
-
-        <p className="text-xl text-slate-300 mb-4">
-          Course Progress
-        </p>
-
-        <div className="w-full bg-slate-700 rounded-full h-5 mb-4">
-          <div
-            className="bg-cyan-500 h-5 rounded-full"
-            style={{
-              width: `${course.progress}%`,
-            }}
-          />
-        </div>
-
-        <p className="text-cyan-400 text-lg font-bold mb-8">
-          {course.progress}% Completed
-        </p>
-
-        {/* Enroll Button */}
-        <div className="mb-8">
-        
-        </div>
-
-        {/* Course Details */}
-        <div className="bg-white/5 rounded-2xl p-6">
-          <h2 className="text-2xl font-bold mb-4">
-            Description
-          </h2>
-
-          <p className="text-slate-300 leading-8">
-            This course helps students learn
-            modern web development using
-            React, Next.js, TypeScript,
-            Tailwind CSS, Supabase and
-            real-world project development.
+          <p className="text-slate-300 text-lg mb-6">
+            {course.description}
           </p>
 
-          <h2 className="text-2xl font-bold mt-8 mb-4">
-            What You Will Learn
-          </h2>
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
+            <div className="bg-slate-800 p-6 rounded-2xl">
+              <h3 className="text-white text-xl font-bold mb-2">
+                Instructor
+              </h3>
 
-          <ul className="list-disc pl-6 space-y-2 text-slate-300">
-            <li>React Fundamentals</li>
-            <li>Next.js App Router</li>
-            <li>TypeScript Basics</li>
-            <li>Tailwind CSS</li>
-            <li>Supabase Database</li>
-            <li>Authentication</li>
-            <li>Deployment to Vercel</li>
-          </ul>
+              <p className="text-slate-300">
+                {course.instructor || "Admin"}
+              </p>
+            </div>
+
+            <div className="bg-slate-800 p-6 rounded-2xl">
+              <h3 className="text-white text-xl font-bold mb-2">
+                Progress
+              </h3>
+
+              <p className="text-cyan-400 text-2xl font-bold">
+                {course.progress || 0}%
+              </p>
+            </div>
+          </div>
+
+          <div className="w-full bg-slate-700 rounded-full h-4 mb-8">
+            <div
+              className="bg-cyan-500 h-4 rounded-full"
+              style={{
+                width: `${course.progress || 0}%`,
+              }}
+            />
+          </div>
+
+          <button
+            className="bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-2xl font-bold text-lg"
+            onClick={() => {}}
+          >
+            Enroll Now
+          </button>
         </div>
       </div>
     </div>
